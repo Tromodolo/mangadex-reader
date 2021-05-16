@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+	"mix": "mix",
     "build": "node ace build --production",
     "start": "node server.js",
     "dev": "node ace serve --watch",
