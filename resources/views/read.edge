@@ -53,11 +53,8 @@
 	(function(){
 		document.querySelector("#chapter-select").addEventListener("change", (evt) => {
 			const value = evt.target.value;
-			let rootUrl = window.location.host;
-			if (rootUrl.includes("localhost")) {
-				rootUrl = "http://" + rootUrl;
-			}
-			window.location.href = `${rootUrl}/read/{{manga.data.id}}/${value}`;
+			// Would base this on the domain name but fuck it, it didn't work.
+			window.location.href = `https://mangadex.tro.moe/read/{{manga.data.id}}/${value}`;
 		});
 	}())
 </script>
