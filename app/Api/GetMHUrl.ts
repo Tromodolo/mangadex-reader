@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { ApiRoot, MangaList } from './';
+import { ApiRoot } from './';
 import RemoveToken from './RateLimit';
 
 async function GetMHUrl(chapterId: string): Promise<{ baseUrl: string }> {

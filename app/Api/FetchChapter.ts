@@ -3,7 +3,7 @@ import { ApiRoot, ChapterResponse } from './';
 import RemoveToken from './RateLimit';
 
 async function FetchChapter(id: string): Promise<ChapterResponse> {
-	await RemoveToken();
+	await RemoveToken(1);
 	const res = await fetch(`${ApiRoot}/chapter/${id}`);
 	return await res.json();
 }
