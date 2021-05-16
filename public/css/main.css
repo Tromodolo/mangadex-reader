@@ -1,0 +1,17 @@
+html {
+	font-family: Ubuntu;
+}
+
+body:before {
+	content: '';
+	background: #f79421;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	position: absolute;
+}
+
+body {
+	min-height: 100vh;
+}

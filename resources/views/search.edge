@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Search - {{searchedFor}}</title>
+	<link rel="stylesheet" href="css/main.css"/>
+	<link rel="stylesheet" href="css/app.css">
+	<script src="js/app.js"></script>
+</head>
+<body class="bg-gray-800">
+	<div class="container mx-auto">
+		<div class="w-full min-h-screen flex flex-col items-center pt-32 pb-16">
+			<h1 class="text-4xl w-full text-center block text-gray-300 text-sm font-bold mb-8">MangaDex Viewer</h1>
+			<form class="w-3/4 flex flex-row" action="search" method="GET">
+				<input value="{{searchedFor}}" name="title" placeholder="Search for manga" class="bg-gray-200 shadow appearance-none border rounded-l w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-lg text-white placeholder-gray-500" />
+				<button class="bg-orange-400 hover:bg-orange-500 text-gray-100 font-bold py-2 px-4 rounded-r shadow-md">Go</button>
+			</form>
+			@each(manga in results.results)
+				<a href="manga/{{manga.data.id}}" class="flex flex-col mt-4 bg-gray-300 rounded w-3/4 flex flex-row shadow-md py-3 px-4 text-gray-700 hover:bg-orange-100 focus:outline-none focus:shadow-outline text-lg text-white">
+					<h2 class="text-2xl font-bold text-gray-700">{{manga.data.attributes.title.en}}</h2>
+					<h3 class="text-lg font-semibold text-gray-400">Status: {{manga.data.attributes.status}}</h3>
+					<p class="text-sm my-4">{{{manga.data.attributes.description.en}}}</p>
+				</a>
+			@end
+			@if(results.total == 0)
+				<h3 class="text-lg font-semibold text-gray-400 p-8">No results found</h3>
+			@endif
+		</div>
+	</div>
+	<div class="absolute top-4 w-full text-center text-gray-300 text-md">
+		This site is not officially affiliated with MangaDex
+	</div>
+</body>
+</html>
