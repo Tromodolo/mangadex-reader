@@ -4,7 +4,7 @@ import FetchChapter from 'App/Api/FetchChapter';
 import FetchManga from 'App/Api/FetchManga';
 import FetchMangaChapters from 'App/Api/FetchMangaChapters';
 import SearchManga from 'App/Api/SearchManga';
-import GetMHUrl from 'App/Api/GetMHURl';
+import FetchMangaDexAtHome from 'App/Api/FetchMangaDexAtHome';
 
 Route.get('/', async ({ view }) => {
 	return view.render('welcome');
@@ -73,7 +73,7 @@ Route.get('/read/:id/:chapterNum', async ({ view, params, response }) => {
 			return response.status(500);
 		}
 
-		let mangadexAtHome = await GetMHUrl(chapterRes.data.id);
+		let mangadexAtHome = await FetchMangaDexAtHome(chapterRes.data.id);
 		let mangaRes = await FetchManga(params.id);
 		let chapterListRes = await FetchMangaChapters(params.id);
 
