@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{manga.data.attributes.title.en}} - Chapter {{chapterNum}}</title>
+	<link rel="stylesheet" href="/css/main.css"/>
+	<link rel="stylesheet" href="/css/app.css">
+	<script src="/js/app.js"></script>
+</head>
+<body class="bg-gray-800">
+	<div class="container mx-auto">
+		<div class="w-full min-h-screen flex flex-col items-center pt-32 pb-16">
+			<div class="w-full px-8 md:px-0 md:w-2/3 flex flex-col">
+				<a href="/manga/{{manga.data.id}}" class="bg-orange-300 text-gray-700 hover:bg-orange-400 hover:text-gray-100 font-bold py-2 px-4 rounded mr-auto">Go back to chapter list</a>
+				<div class="flex flex-row justify-between items-center mt-12">
+					@if(prevChapter !== "") 
+						<a href="{{prevChapter}}" class="bg-orange-300 text-gray-700 hover:bg-orange-400 hover:text-gray-100 font-bold py-2 px-4 rounded">Previous</a>
+					@else
+						<a disabled="true" class="bg-gray-200 text-gray-500 font-bold py-2 px-4 rounded">Previous</a>
+					@end
+					<select class="w-1/3" id="chapter-select">
+						@each(chpt in chapterList.results)
+							@if(chapter.data.id === chpt.data.id)
+								<option value={{chpt.data.id}} selected>
+									Chapter {{chpt.data.attributes.chapter}}
+								</option>
+							@else
+								<option value={{chpt.data.id}}>
+									Chapter {{chpt.data.attributes.chapter}}
+								</option>
+							@end
+						@end
+					</select>
+					@if(nextChapter !== "") 
+						<a href="{{nextChapter}}" class="bg-orange-300 text-gray-700 hover:bg-orange-400 hover:text-gray-100 font-bold py-2 px-4 rounded">Next</a>
+					@else
+						<a disabled="true" class="bg-gray-200 text-gray-500 font-bold py-2 px-4 rounded">Next</a>
+					@end
+				</div>
+			</div>
+			<h3 class="text-lg font-semibold text-gray-400 p-8">{{manga.data.attributes.title.en}} - Chapter {{chapterNum}}</h3>
+			@each(img in images)
+				<img class="my-1" src="{{img}}" loading="lazy"/>
+			@end
+		</div>
+	</div>
+	<div class="absolute top-4 w-full text-center text-gray-300 text-md">
+		This site is not officially affiliated with MangaDex
+	</div>
+</body>
+<script>
+	(function(){
+		document.querySelector("#chapter-select").addEventListener("change", (evt) => {
+			const value = evt.target.value;
+			// Would base this on the domain name but fuck it, it didn't work.
+			window.location.href = `https://mangadex.tro.moe/read/{{manga.data.id}}/${value}`;
+		});
+	}())
+</script>
+</html>

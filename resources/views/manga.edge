@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{manga.data.attributes.title.en}}</title>
+	<link rel="stylesheet" href="../css/main.css"/>
+	<link rel="stylesheet" href="../css/app.css">
+	<script src="js/app.js"></script>
+</head>
+<body class="bg-gray-800">
+	<div class="container mx-auto">
+		<div class="w-full min-h-screen flex flex-col items-center pt-32 pb-16">
+			<div class="w-3/4">
+				<a href="/" class="bg-orange-300 text-gray-700 hover:bg-orange-400 hover:text-gray-100 font-bold py-2 px-4 rounded mr-auto">Go back</a>
+			</div>
+			<div class="flex flex-col mt-4 bg-gray-300 w-3/4 flex flex-row shadow-md py-3 px-4 text-gray-700 rounded focus:outline-none focus:shadow-outline text-lg text-white">
+				<h2 class="text-2xl font-bold text-gray-700">{{manga.data.attributes.title.en}}</h2>
+				<h3 class="text-lg font-semibold text-gray-500">Status: {{manga.data.attributes.status}}</h3>
+				<p class="text-sm my-4">{{{manga.data.attributes.description.en}}}</p>
+			</div>
+			<h3 class="text-lg font-semibold text-gray-400 p-8 px-8 w-3/4 text-center">Chapters</h3>
+			@each(chapter in chapters.results)
+				<a href="/read/{{manga.data.id}}/{{chapter.data.id}}" class=" mt-4 rounded bg-gray-300 w-3/4 flex flex-row items-center justify-center shadow-md py-3 px-4 text-gray-700 hover:bg-orange-100 focus:outline-none focus:shadow-outline text-lg text-white">
+					<div class="flex flex-col w-1/2">
+						<span class="text-xl font-bold text-gray-600">Chapter {{chapter.data.attributes.chapter}}</span>
+						<span class="text-sm">{{{chapter.data.attributes.title}}}</span>
+					</div>
+					<span class="text-sm text-gray-500 w-1/2 text-right">{{new Date(chapter.data.attributes.createdAt).toLocaleDateString()}}</span>
+				</a>
+			@end
+		</div>
+	</div>
+	<div class="absolute top-4 w-full text-center text-gray-300 text-md">
+		This site is not officially affiliated with MangaDex
+	</div>
+</body>
+</html>
