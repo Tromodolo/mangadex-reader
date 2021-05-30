@@ -13,4 +13,7 @@ export type ChapterList = components['schemas']['ChapterList'];
 
 export type Group = components['schemas']['ScanlationGroupResponse'];
 
+export type CoverResponse = components['schemas']['CoverResponse'];
+export type Cover = components['schemas']['Cover'];
+
 export const ApiRoot = 'https://api.mangadex.org';

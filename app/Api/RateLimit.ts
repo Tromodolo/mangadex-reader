@@ -1,13 +1,9 @@
 import { RateLimiter } from 'limiter';
 
-const limiter = new RateLimiter(5, 1000);
+const limiter = new RateLimiter({tokensPerInterval: 5, interval: "second"});
 
-function RemoveToken(total: number) {
-	return new Promise((resolve) => {
-		limiter.removeTokens(total, () => {
-			return resolve(true);
-		});
-	});
+async function RemoveToken(total: number) {
+	await limiter.removeTokens(total);
 }
 
 export default RemoveToken;

@@ -22,6 +22,47 @@ export interface paths {
     /** Create a new Manga. */
     post: operations["post-manga"];
   };
+  "/manga/{id}/aggregate": {
+    get: {
+      parameters: {
+        path: {
+          /** Manga ID */
+          id: string;
+        };
+        query: {
+          translatedLanguage?: string[];
+        };
+      };
+      responses: {
+        /** OK */
+        200: {
+          content: {
+            "application/json": {
+              result: string;
+              volumes?: {
+                [key: string]: {
+                  volume?: string;
+                  count?: number;
+                  chapters?: {
+                    [key: string]: {
+                      chapter?: string;
+                      count?: number;
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    parameters: {
+      path: {
+        /** Manga ID */
+        id: string;
+      };
+    };
+  };
   "/manga/{id}": {
     /** View Manga. */
     get: operations["get-manga-id"];
@@ -167,6 +208,22 @@ export interface paths {
       };
     };
   };
+  "/cover": {
+    get: operations["get-cover"];
+  };
+  "/cover/{mangaId}": {
+    post: operations["upload-cover"];
+  };
+  "/cover/{coverId}": {
+    get: operations["get-cover-id"];
+    put: operations["edit-cover"];
+    delete: operations["delete-cover"];
+    parameters: {
+      path: {
+        coverId: string;
+      };
+    };
+  };
   "/author": {
     get: operations["get-author"];
     post: operations["post-author"];
@@ -205,7 +262,7 @@ export interface paths {
   };
   "/manga/read": {
     /** A list of chapter ids that are marked as read for the given manga ids */
-    get: operations["get-manga-chapter-readmarkers"];
+    get: operations["get-manga-chapter-readmarkers-2"];
   };
   "/chapter/{id}/read": {
     /** Mark chapter as read for the current user */
@@ -297,48 +354,49 @@ export interface components {
         | ("shounen" | "shoujo" | "josei" | "seinen")
         | null;
       status?: ("ongoing" | "completed" | "hiatus" | "cancelled") | null;
+      /** Year of release */
       year?: number | null;
       contentRating?:
         | ("safe" | "suggestive" | "erotica" | "pornographic")
         | null;
       modNotes?: string | null;
       version?: number;
-    } & { [key: string]: any };
+    };
     LocalizedString: { [key: string]: string };
     MangaResponse: {
       result?: "ok" | "error";
       data?: components["schemas"]["Manga"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     ChapterResponse: {
       result?: "ok" | "error";
       data?: components["schemas"]["Chapter"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     Relationship: {
       id?: string;
       type?: string;
-    } & { [key: string]: any };
+    };
     Chapter: {
       id?: string;
       type?: "chapter";
       attributes?: components["schemas"]["ChapterAttributes"];
-    } & { [key: string]: any };
+    };
     Manga: {
       id?: string;
       type?: "manga";
       attributes?: components["schemas"]["MangaAttributes"];
-    } & { [key: string]: any };
+    };
     ErrorResponse: {
-      result?: string;
+      result: string;
       errors?: components["schemas"]["Error"][];
-    } & { [key: string]: any };
+    };
     Error: {
       id?: string;
       status?: number;
       title?: string;
       detail?: string;
-    } & { [key: string]: any };
+    };
     ChapterAttributes: {
       title?: string;
       volume?: string | null;
@@ -352,7 +410,7 @@ export interface components {
       createdAt?: string;
       updatedAt?: string;
       publishAt?: string;
-    } & { [key: string]: any };
+    };
     MangaAttributes: {
       title?: components["schemas"]["LocalizedString"];
       altTitles?: components["schemas"]["LocalizedString"][];
@@ -364,25 +422,22 @@ export interface components {
       lastChapter?: string | null;
       publicationDemographic?: string | null;
       status?: string | null;
+      /** Year of release */
       year?: number | null;
       contentRating?: string | null;
       tags?: components["schemas"]["Tag"][];
       version?: number;
       createdAt?: string;
       updatedAt?: string;
-    } & { [key: string]: any };
-    MangaCreate: components["schemas"]["MangaRequest"] & {
-      [key: string]: any;
-    } & { [key: string]: any };
-    MangaEdit: components["schemas"]["MangaRequest"] & {
-      [key: string]: any;
-    } & { [key: string]: any };
+    };
+    MangaCreate: components["schemas"]["MangaRequest"] & { [key: string]: any };
+    MangaEdit: components["schemas"]["MangaRequest"] & { [key: string]: any };
     ChapterEdit: components["schemas"]["ChapterRequest"] & {
       [key: string]: any;
-    } & { [key: string]: any };
+    };
     Response: {
       result?: "ok" | "error";
-    } & { [key: string]: any };
+    };
     Login: {
       username: string;
       password: string;
@@ -392,17 +447,17 @@ export interface components {
       token?: {
         session?: string;
         refresh?: string;
-      } & { [key: string]: any };
-    } & { [key: string]: any };
+      };
+    };
     CheckResponse: {
       ok?: "ok" | "error";
       isAuthenticated?: boolean;
       roles?: string[];
       permissions?: string[];
-    } & { [key: string]: any };
+    };
     LogoutResponse: {
       result?: "ok" | "error";
-    } & { [key: string]: any };
+    };
     RefreshToken: {
       token: string;
     };
@@ -411,96 +466,119 @@ export interface components {
       token?: {
         session?: string;
         refresh?: string;
-      } & { [key: string]: any };
+      };
       message?: string;
-    } & { [key: string]: any };
+    };
     AccountActivateResponse: {
       result?: "ok";
-    } & { [key: string]: any };
+    };
     CreateAccount: {
       username: string;
       password: string;
       email: string;
-    } & { [key: string]: any };
+    };
     ScanlationGroupResponse: {
       result?: "ok";
       data?: components["schemas"]["ScanlationGroup"];
-      relationships?: ({
+      relationships?: {
         id?: string;
         type?: string;
-      } & { [key: string]: any })[];
-    } & { [key: string]: any };
+      }[];
+    };
     ScanlationGroup: {
       id?: string;
       type?: "scanlation_group";
       attributes?: components["schemas"]["ScanlationGroupAttributes"];
-    } & { [key: string]: any };
+    };
     ScanlationGroupAttributes: {
       name?: string;
       leader?: components["schemas"]["User"];
       version?: number;
       createdAt?: string;
       updatedAt?: string;
-    } & { [key: string]: any };
+    };
     User: {
       id?: string;
       type?: "user";
       attributes?: components["schemas"]["UserAttributes"];
-    } & { [key: string]: any };
+    };
     UserAttributes: {
       username?: string;
       version?: number;
-    } & { [key: string]: any };
+    };
     CreateScanlationGroup: {
       name: string;
       leader?: string;
       members?: string[];
       version?: number;
-    } & { [key: string]: any };
+    };
     ScanlationGroupEdit: {
       name?: string;
       leader?: string;
       members?: string[];
       version: number;
-    } & { [key: string]: any };
+    };
     CustomListCreate: {
       name: string;
       visibility?: "public" | "private";
       manga?: string[];
       version?: number;
-    } & { [key: string]: any };
+    };
     CustomListEdit: {
       name?: string;
       visibility?: "public" | "private";
       manga?: string[];
       version: number;
-    } & { [key: string]: any };
+    };
     CustomListResponse: {
       result?: "ok" | "error";
       data?: components["schemas"]["CustomList"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     CustomList: {
       id?: string;
       type?: "custom_list";
       attributes?: components["schemas"]["CustomListAttributes"];
-    } & { [key: string]: any };
+    };
     CustomListAttributes: {
       name?: string;
       visibility?: "private" | "public";
       owner?: components["schemas"]["User"];
       version?: number;
-    } & { [key: string]: any };
+    };
+    CoverResponse: {
+      result?: string;
+      data?: components["schemas"]["Cover"];
+      relationships?: components["schemas"]["Relationship"][];
+    };
+    Cover: {
+      id?: string;
+      type?: "cover_art";
+      attributes?: components["schemas"]["CoverAttributes"];
+    };
+    CoverAttributes: {
+      volume?: string | null;
+      fileName?: string;
+      description?: string | null;
+      version?: number;
+      createdAt?: string;
+      updatedAt?: string;
+    };
+    CoverEdit: {
+      volume: string | null;
+      description?: string | null;
+      version: number;
+    };
     AuthorResponse: {
       result?: string;
       data?: components["schemas"]["Author"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     Author: {
       id?: string;
       type?: "author";
       attributes?: components["schemas"]["AuthorAttributes"];
-    } & { [key: string]: any };
+    };
     AuthorAttributes: {
       name?: string;
       imageUrl?: string;
@@ -508,11 +586,11 @@ export interface components {
       version?: number;
       createdAt?: string;
       updatedAt?: string;
-    } & { [key: string]: any };
+    };
     AuthorEdit: {
       name?: string;
       version: number;
-    } & { [key: string]: any };
+    };
     AuthorCreate: {
       name: string;
       version?: number;
@@ -525,38 +603,38 @@ export interface components {
       result?: "ok";
       data?: components["schemas"]["MappingId"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     MappingId: {
       id?: string;
       type?: "mapping_id";
       attributes?: components["schemas"]["MappingIdAttributes"];
-    } & { [key: string]: any };
+    };
     MappingIdAttributes: {
       type?: "manga" | "chapter" | "group" | "tag";
       legacyId?: number;
       newId?: string;
-    } & { [key: string]: any };
+    };
     TagResponse: {
       result?: "ok";
       data?: components["schemas"]["Tag"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     Tag: {
       id?: string;
       type?: "tag";
       attributes?: components["schemas"]["TagAttributes"];
-    } & { [key: string]: any };
+    };
     TagAttributes: {
       name?: components["schemas"]["LocalizedString"];
       description?: components["schemas"]["LocalizedString"];
       group?: string;
       version?: number;
-    } & { [key: string]: any };
+    };
     UserResponse: {
       result?: "ok";
       data?: components["schemas"]["User"];
       relationships?: components["schemas"]["Relationship"][];
-    } & { [key: string]: any };
+    };
     SendAccountActivationCode: {
       email: string;
     };
@@ -574,7 +652,7 @@ export interface components {
             | "completed"
           )
         | null;
-    } & { [key: string]: any };
+    };
     ChapterRequest: {
       title?: string;
       volume?: string | null;
@@ -583,43 +661,49 @@ export interface components {
       data?: string[];
       dataSaver?: string[];
       version?: number;
-    } & { [key: string]: any };
+    };
+    CoverList: {
+      results?: components["schemas"]["CoverResponse"][];
+      limit?: number;
+      offset?: number;
+      total?: number;
+    };
     AuthorList: {
       results?: components["schemas"]["AuthorResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
     ChapterList: {
       results?: components["schemas"]["ChapterResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
     ScanlationGroupList: {
       results?: components["schemas"]["ScanlationGroupResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
     MangaList: {
       results?: components["schemas"]["MangaResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
     CustomListList: {
       results?: components["schemas"]["CustomListResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
     UserList: {
       results?: components["schemas"]["UserResponse"][];
       limit?: number;
       offset?: number;
       total?: number;
-    } & { [key: string]: any };
+    };
   };
 }
 
@@ -633,6 +717,7 @@ export interface operations {
         title?: string;
         authors?: string[];
         artists?: string[];
+        /** Year of release */
         year?: number;
         includedTags?: string[];
         includedTagsMode?: "AND" | "OR";
@@ -655,7 +740,7 @@ export interface operations {
         order?: {
           createdAt?: "asc" | "desc";
           updatedAt?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -665,8 +750,6 @@ export interface operations {
           "application/json": components["schemas"]["MangaList"];
         };
       };
-      /** No Content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -947,8 +1030,6 @@ export interface operations {
           "application/json": components["schemas"]["ScanlationGroupList"];
         };
       };
-      /** No Content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1367,7 +1448,7 @@ export interface operations {
         manga?: string;
         volume?: string;
         chapter?: string;
-        translatedLanguage?: string;
+        translatedLanguage?: string[];
         createdAtSince?: string;
         updatedAtSince?: string;
         publishAtSince?: string;
@@ -1377,7 +1458,7 @@ export interface operations {
           publishAt?: "asc" | "desc";
           volume?: "asc" | "desc";
           chapter?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -1387,8 +1468,6 @@ export interface operations {
           "application/json": components["schemas"]["ChapterList"];
         };
       };
-      /** No Content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1506,14 +1585,14 @@ export interface operations {
       query: {
         limit?: number;
         offset?: number;
-        locales?: string[];
+        translatedLanguage?: string[];
         createdAtSince?: string;
         updatedAtSince?: string;
         publishAtSince?: string;
         order?: {
           volume?: "asc" | "desc";
           chapter?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -1523,8 +1602,6 @@ export interface operations {
           "application/json": components["schemas"]["ChapterList"];
         };
       };
-      /** No content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1543,14 +1620,14 @@ export interface operations {
       query: {
         limit?: number;
         offset?: number;
-        locales?: string[];
+        translatedLanguage?: string[];
         createdAtSince?: string;
         updatedAtSince?: string;
         publishAtSince?: string;
         order?: {
           volume?: "asc" | "desc";
           chapter?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -1560,8 +1637,6 @@ export interface operations {
           "application/json": components["schemas"]["ChapterList"];
         };
       };
-      /** No content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1624,6 +1699,166 @@ export interface operations {
       };
     };
   };
+  "get-cover": {
+    parameters: {
+      query: {
+        limit?: number;
+        offset?: number;
+        /** Manga ids (limited to 100 per request) */
+        manga?: string[];
+        /** Covers ids (limited to 100 per request) */
+        ids?: string[];
+        /** User ids (limited to 100 per request) */
+        uploaders?: string[];
+        order?: {
+          createdAt?: "asc" | "desc";
+          updatedAt?: "asc" | "desc";
+          volume?: "asc" | "desc";
+        };
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["CoverList"];
+        };
+      };
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  "upload-cover": {
+    parameters: {
+      path: {
+        mangaId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["CoverResponse"];
+        };
+      };
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": {
+          file?: string;
+        };
+      };
+    };
+  };
+  "get-cover-id": {
+    parameters: {
+      path: {
+        coverId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["CoverResponse"];
+        };
+      };
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  "edit-cover": {
+    parameters: {
+      path: {
+        coverId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["CoverResponse"];
+        };
+      };
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+    /** The size of the body is limited to 2KB. */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CoverEdit"];
+      };
+    };
+  };
+  "delete-cover": {
+    parameters: {
+      path: {
+        coverId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   "get-author": {
     parameters: {
       query: {
@@ -1634,7 +1869,7 @@ export interface operations {
         name?: string;
         order?: {
           name?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -1644,8 +1879,6 @@ export interface operations {
           "application/json": components["schemas"]["AuthorList"];
         };
       };
-      /** No Content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1811,14 +2044,14 @@ export interface operations {
       query: {
         limit?: number;
         offset?: number;
-        locales?: string[];
+        translatedLanguage?: string[];
         createdAtSince?: string;
         updatedAtSince?: string;
         publishAtSince?: string;
         order?: {
           volume?: "asc" | "desc";
           chapter?: "asc" | "desc";
-        } & { [key: string]: any };
+        };
       };
     };
     responses: {
@@ -1828,8 +2061,6 @@ export interface operations {
           "application/json": components["schemas"]["ChapterList"];
         };
       };
-      /** No content */
-      204: never;
       /** Bad Request */
       400: {
         content: {
@@ -1838,8 +2069,27 @@ export interface operations {
       };
     };
   };
-  /** A list of chapter ids that are marked as read for the given manga ids */
+  /** A list of chapter ids that are marked as read for the specified manga */
   "get-manga-chapter-readmarkers": {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": {
+            result?: "ok";
+            data?: string[];
+          };
+        };
+      };
+    };
+  };
+  /** A list of chapter ids that are marked as read for the given manga ids */
+  "get-manga-chapter-readmarkers-2": {
     parameters: {
       query: {
         /** Manga ids */
@@ -1853,7 +2103,7 @@ export interface operations {
           "application/json": {
             result?: "ok";
             data?: string[];
-          } & { [key: string]: any };
+          };
         };
       };
     };
@@ -1871,7 +2121,7 @@ export interface operations {
         content: {
           "application/json": {
             result?: "ok" | "error";
-          } & { [key: string]: any };
+          };
         };
       };
     };
@@ -1889,7 +2139,7 @@ export interface operations {
         content: {
           "application/json": {
             result?: "ok" | "error";
-          } & { [key: string]: any };
+          };
         };
       };
     };
@@ -1934,7 +2184,7 @@ export interface operations {
              * The URL returned is valid for the requested chapter only, and for a duration of 15 minutes from the time of the response.
              */
             baseUrl?: string;
-          } & { [key: string]: any };
+          };
         };
       };
       /** Not Found */
@@ -2050,8 +2300,6 @@ export interface operations {
           "application/json": components["schemas"]["ScanlationGroupList"];
         };
       };
-      /** No content */
-      204: never;
     };
   };
   "get-user-follows-user": {
@@ -2068,8 +2316,6 @@ export interface operations {
           "application/json": components["schemas"]["UserList"];
         };
       };
-      /** No content */
-      204: never;
     };
   };
   "get-user-follows-manga": {
@@ -2086,8 +2332,6 @@ export interface operations {
           "application/json": components["schemas"]["MangaList"];
         };
       };
-      /** No content */
-      204: never;
     };
   };
   "get-manga-status": {
@@ -2108,7 +2352,7 @@ export interface operations {
       200: {
         content: {
           "application/json": {
-            result?: string;
+            result: string;
             statuses?: {
               [key: string]:
                 | "reading"
@@ -2118,7 +2362,7 @@ export interface operations {
                 | "re_reading"
                 | "completed";
             };
-          } & { [key: string]: any };
+          };
         };
       };
     };
@@ -2134,7 +2378,7 @@ export interface operations {
       200: {
         content: {
           "application/json": {
-            result?: string;
+            result: string;
             status?:
               | "reading"
               | "on_hold"
@@ -2142,7 +2386,7 @@ export interface operations {
               | "dropped"
               | "re_reading"
               | "completed";
-          } & { [key: string]: any };
+          };
         };
       };
       /** Forbidden */
@@ -2204,7 +2448,7 @@ export interface operations {
         content: {
           "application/json": {
             result?: "ok" | "error";
-          } & { [key: string]: any };
+          };
         };
       };
       /** Bad Request: Captcha challenge result was wrong, the Captcha Verification service was down or other, refer to the error message and the errorCode inside the error context */
@@ -2218,7 +2462,7 @@ export interface operations {
       content: {
         "application/json": {
           captchaChallenge: string;
-        } & { [key: string]: any };
+        };
       };
     };
   };

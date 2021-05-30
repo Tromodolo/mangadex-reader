@@ -5,6 +5,7 @@ import FetchManga from 'App/Api/FetchManga';
 import FetchMangaChapters from 'App/Api/FetchMangaChapters';
 import SearchManga from 'App/Api/SearchManga';
 import FetchMangaDexAtHome from 'App/Api/FetchMangaDexAtHome';
+import FetchCover from 'App/Api/FetchCover';
 
 Route.get('/', async ({ view }) => {
 	return view.render('welcome');
@@ -48,9 +49,18 @@ Route.get('/manga/:id', async ({ view, params }) => {
 		let mangaRes = await FetchManga(params.id);
 		let chapterRes = await FetchMangaChapters(params.id);
 
+		console.log(chapterRes);
+
 		if (mangaRes.data?.attributes?.description?.en?.includes('[')) {
 			mangaRes.data.attributes.description.en =
 				mangaRes.data.attributes.description.en.split('[')[0];
+		}
+
+		const cover = mangaRes?.relationships?.find((x) => x.type === "cover_art");
+		let cover_img = "";
+		if (cover) {
+			const coverRes = await FetchCover(cover.id);
+			cover_img = `https://uploads.mangadex.org/covers/${mangaRes.data?.id}/${coverRes.data?.attributes.fileName}`
 		}
 
 		if (mangaRes.result === 'error') {
@@ -59,6 +69,7 @@ Route.get('/manga/:id', async ({ view, params }) => {
 			return view.render('manga', {
 				manga: mangaRes,
 				chapters: chapterRes,
+				cover: cover_img,
 			});
 		}
 	} catch {

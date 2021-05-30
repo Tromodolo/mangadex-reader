@@ -14,10 +14,15 @@
 			<div class="w-3/4">
 				<a href="/" class="bg-orange-300 text-gray-700 hover:bg-orange-400 hover:text-gray-100 font-bold py-2 px-4 rounded mr-auto">Go back</a>
 			</div>
-			<div class="flex flex-col mt-4 bg-gray-300 w-3/4 flex flex-row shadow-md py-3 px-4 text-gray-700 rounded focus:outline-none focus:shadow-outline text-lg text-white">
-				<h2 class="text-2xl font-bold text-gray-700">{{manga.data.attributes.title.en}}</h2>
-				<h3 class="text-lg font-semibold text-gray-500">Status: {{manga.data.attributes.status}}</h3>
-				<p class="text-sm my-4">{{{manga.data.attributes.description.en}}}</p>
+			<div class="flex flex-col md:flex-row mt-4 bg-gray-300 w-3/4 shadow-md py-3 px-4 text-gray-700 rounded focus:outline-none focus:shadow-outline text-lg text-white">
+				@if(cover) 
+					<img class="object-contain w-64 max-w-1/4 rounded" src="{{cover}}" />
+				@endif
+				<div class="flex flex-col px-8">
+					<h2 class="text-2xl font-bold text-gray-700">{{manga.data.attributes.title.en}}</h2>
+					<h3 class="text-lg font-semibold text-gray-500">Status: {{manga.data.attributes.status}}</h3>
+					<p class="text-sm my-4">{{{manga.data.attributes.description.en}}}</p>
+				</div>
 			</div>
 			<h3 class="text-lg font-semibold text-gray-400 p-8 px-8 w-3/4 text-center">Chapters</h3>
 			@each(chapter in chapters.results)
