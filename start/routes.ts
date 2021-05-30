@@ -59,8 +59,8 @@ Route.get('/manga/:id', async ({ view, params }) => {
 		const cover = mangaRes?.relationships?.find((x) => x.type === "cover_art");
 		let cover_img = "";
 		if (cover) {
-			const coverRes = await FetchCover(cover.id);
-			cover_img = `https://uploads.mangadex.org/covers/${mangaRes.data?.id}/${coverRes.data?.attributes.fileName}`
+			const coverRes = await FetchCover(cover?.id ?? "");
+			cover_img = `https://uploads.mangadex.org/covers/${mangaRes.data?.id}/${coverRes.data?.attributes?.fileName ?? ""}`
 		}
 
 		if (mangaRes.result === 'error') {
@@ -88,7 +88,7 @@ Route.get('/read/:id/:chapterNum', async ({ view, params, response }) => {
 		let mangaRes = await FetchManga(params.id);
 		let chapterListRes = await FetchMangaChapters(params.id);
 
-		if (chapterListRes.result === 'error' || chapterRes.result === 'error') {
+		if (chapterRes.result === 'error') {
 			return view.render('welcome');
 		} else {
 			const chapterIndex =
