@@ -49,8 +49,6 @@ Route.get('/manga/:id', async ({ view, params }) => {
 		let mangaRes = await FetchManga(params.id);
 		let chapterRes = await FetchMangaChapters(params.id);
 
-		console.log(chapterRes);
-
 		if (mangaRes.data?.attributes?.description?.en?.includes('[')) {
 			mangaRes.data.attributes.description.en =
 				mangaRes.data.attributes.description.en.split('[')[0];
